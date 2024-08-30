@@ -3,6 +3,7 @@ import CryptoJS     from "crypto-js/core";
 import Pbkdf2 from 'crypto-js/pbkdf2'
 import Aes from 'crypto-js/aes'
 import {compressToBase64, decompressFromBase64} from 'lz-string'
+import {createEncProps, createSalt}             from "./enc.utils";
 
 export class Enc {
     public constructor(
@@ -11,16 +12,13 @@ export class Enc {
 
     public encrypt (msg: string, pass: string): string {
         const saltSize = this.encOptions.ivSize/8 // hex 32 in length
-        const salt = CryptoJS.lib.WordArray.random(saltSize)
+        const salt = createSalt(saltSize)
         const key = Pbkdf2(pass, salt, {
             keySize: this.encOptions.keySize/32,
             iterations: this.encOptions.iterations
         });
-        const iv = CryptoJS.lib.WordArray.random(saltSize);
-        const encrypted = Aes.encrypt(msg, key, {
-            iv: iv,
-
-        });
+        const iv = createSalt(saltSize);
+        const encrypted = Aes.encrypt(msg, key, createEncProps(iv, this.encOptions));
         return compressToBase64(salt.toString() + iv.toString() + encrypted.toString())
     }
 
@@ -33,12 +31,7 @@ export class Enc {
             keySize: this.encOptions.keySize/32,
             iterations: this.encOptions.iterations
         });
-        const decrypted = Aes.decrypt(encrypted, key, {
-            iv: iv,
-            padding: this.encOptions.padding,
-            mode: CryptoJS.mode.CBC,
-            hasher: CryptoJS.algo.SHA256
-        })
+        const decrypted = Aes.decrypt(encrypted, key, createEncProps(iv, this.encOptions))
         return decrypted.toString(CryptoJS.enc.Utf8)
     }
 }

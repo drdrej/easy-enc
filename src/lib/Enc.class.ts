@@ -2,6 +2,7 @@ import {EncOptions} from "./enc.types";
 import CryptoJS     from "crypto-js/core";
 import Pbkdf2 from 'crypto-js/pbkdf2'
 import Aes from 'crypto-js/aes'
+import {compress, decompress} from 'lz-string'
 
 export class Enc {
     public constructor(
@@ -37,7 +38,7 @@ export class Enc {
             mode: CryptoJS.mode.CBC,
             hasher: CryptoJS.algo.SHA256
         })
-        return decrypted.toString(CryptoJS.enc.Utf8);
+        return decrypted.toString(CryptoJS.enc.Utf8)
     }
 }
 

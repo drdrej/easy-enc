@@ -4,3 +4,4 @@ export function convertUtf8ToBase64( str: string ) {
 export function convertBase64ToUtf8( str: string ) {
     return decodeURIComponent(atob( str ))
 }
+

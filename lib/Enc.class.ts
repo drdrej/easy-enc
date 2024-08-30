@@ -5,7 +5,7 @@ import Aes from 'crypto-js/aes'
 
 class Enc {
     constructor(
-        private encOptions: EncOptions
+        public encOptions: EncOptions
     ) {}
 
     encrypt (msg: string, pass: string): string {

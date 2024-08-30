@@ -1,6 +1,3 @@
-function x() {
-    const a: number = 5
-    return a + 7
-}
+import {DEFAULT_ENC_SHA256_CBC_PCKS7} from "./lib/Enc.class";
 
-x()
+export default DEFAULT_ENC_SHA256_CBC_PCKS7

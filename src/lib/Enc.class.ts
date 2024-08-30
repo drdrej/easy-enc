@@ -11,14 +11,14 @@ export class Enc {
     ) {}
 
     public encrypt (msg: string, pass: string): string {
-        const saltSize = this.encOptions.ivSize/8 // hex 32 in length
+        const saltSize = this.encOptions.ivSize/8
         const salt = createSalt(saltSize)
         const key = Pbkdf2(pass, salt, {
             keySize: this.encOptions.keySize/32,
             iterations: this.encOptions.iterations
         });
         const iv = createSalt(saltSize);
-        const encrypted = Aes.encrypt(msg, key, createEncProps(iv, this.encOptions));
+        const encrypted = Aes.encrypt(compressToBase64(msg), key, createEncProps(iv, this.encOptions));
         return compressToBase64(salt.toString() + iv.toString() + encrypted.toString())
     }
 
@@ -32,7 +32,7 @@ export class Enc {
             iterations: this.encOptions.iterations
         });
         const decrypted = Aes.decrypt(encrypted, key, createEncProps(iv, this.encOptions))
-        return decrypted.toString(CryptoJS.enc.Utf8)
+        return decompressFromBase64(decrypted.toString(CryptoJS.enc.Utf8))
     }
 }
 

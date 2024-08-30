@@ -3,12 +3,12 @@ import CryptoJS     from "crypto-js/core";
 import Pbkdf2 from 'crypto-js/pbkdf2'
 import Aes from 'crypto-js/aes'
 
-class Enc {
-    constructor(
+export class Enc {
+    public constructor(
         public encOptions: EncOptions
     ) {}
 
-    encrypt (msg: string, pass: string): string {
+    public encrypt (msg: string, pass: string): string {
         const saltSize = this.encOptions.ivSize/8 // hex 32 in length
         const salt = CryptoJS.lib.WordArray.random(saltSize)
         const key = Pbkdf2(pass, salt, {
@@ -23,7 +23,7 @@ class Enc {
         return salt.toString() + iv.toString() + encrypted.toString()
     }
 
-    decrypt (transitmessage: string, pass: string): string {
+    public decrypt (transitmessage: string, pass: string): string {
         const salt = CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32));
         const iv = CryptoJS.enc.Hex.parse(transitmessage.substr(32, 32))
         const encrypted = transitmessage.substring(64);

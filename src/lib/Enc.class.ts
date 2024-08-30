@@ -2,7 +2,7 @@ import {EncOptions} from "./enc.types";
 import CryptoJS     from "crypto-js/core";
 import Pbkdf2 from 'crypto-js/pbkdf2'
 import Aes from 'crypto-js/aes'
-import {compress, decompress} from 'lz-string'
+import {compressToBase64, decompressFromBase64} from 'lz-string'
 
 export class Enc {
     public constructor(
@@ -21,10 +21,11 @@ export class Enc {
             iv: iv,
 
         });
-        return salt.toString() + iv.toString() + encrypted.toString()
+        return compressToBase64(salt.toString() + iv.toString() + encrypted.toString())
     }
 
-    public decrypt (transitmessage: string, pass: string): string {
+    public decrypt (compressed: string, pass: string): string {
+        const transitmessage = decompressFromBase64(compressed)
         const salt = CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32));
         const iv = CryptoJS.enc.Hex.parse(transitmessage.substr(32, 32))
         const encrypted = transitmessage.substring(64);

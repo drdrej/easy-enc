@@ -26,8 +26,8 @@ export class Enc {
 
     public decrypt (compressed: string, pass: string): string {
         const transitmessage = decompressFromBase64(compressed)
-        const salt = CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32));
-        const iv = CryptoJS.enc.Hex.parse(transitmessage.substr(32, 32))
+        const salt = CryptoJS.enc.Hex.parse(transitmessage.substring(0, 32));
+        const iv = CryptoJS.enc.Hex.parse(transitmessage.substring(32, 64))
         const encrypted = transitmessage.substring(64);
         const key = Pbkdf2(pass, salt, {
             keySize: this.encOptions.keySize/32,
